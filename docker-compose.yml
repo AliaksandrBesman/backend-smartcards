@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  backend-smartcards:
+    image: ${DOCKER_REGISTRY-}backendsmartcards
+    build:
+      context: .
+      dockerfile: backend-smartcards/Dockerfile
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest

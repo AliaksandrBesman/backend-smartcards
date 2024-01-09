@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  backend-smartcards:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=80
+      - ConnectionStrings__DefaultConnection=Server=db;Database=smartcardsdb;TrustServerCertificate=True;Trusted_Connection=False;User Id=sa;Password=Password123;MultipleActiveResultSets=true
+    ports:
+      - "5000:80"
+    depends_on:
+      - db
+  db:
+    environment:
+      SA_PASSWORD: Password123
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
