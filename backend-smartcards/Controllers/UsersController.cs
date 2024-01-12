@@ -21,6 +21,26 @@ namespace backend_smartcards.Controllers
             _context = context;
         }
 
+        [HttpGet("[action]/{id}")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsersLeftCommentsByModuleId(int id)
+        {
+            var finded_user = await _context.Users.Where(u => u.Comments.Any(c => c.SubjectId == id)).ToListAsync();
+
+            if (finded_user == null)
+            {
+                return NotFound();
+            }
+
+            return finded_user;
+        }
+
+        // GET: api/Users
+        [HttpGet("[action]")]
+        public async Task<ActionResult<IEnumerable<UserRole>>> GetUserRoles()
+        {
+            return await _context.UserRoles.ToListAsync();
+        }
+
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()

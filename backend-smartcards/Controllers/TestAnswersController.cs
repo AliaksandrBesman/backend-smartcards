@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using backend_smartcards.Models;
 using Newtonsoft.Json.Linq;
+using System.Reflection;
 
 namespace backend_smartcards.Controllers
 {
@@ -119,6 +120,39 @@ namespace backend_smartcards.Controllers
             }
 
             return finded_user;
+        }
+
+        [HttpGet("[action]/{id}")]
+        public async Task<ActionResult<IEnumerable<TestAnswer>>> GetUsersTestResultByModuleId(int id)
+        {
+            var finded_user = await _context.TestAnswers.Where(t => t.Question.SubjectLessonId == id).ToListAsync();
+
+            if (finded_user == null)
+            {
+                return NotFound();
+            }
+
+            return finded_user;
+        }
+
+        // DELETE: api/TestAnswers/5
+        [HttpDelete("[action]/{module_id}")]
+        public async Task<IActionResult> DeleteTestAnswerForModule(int module_id)
+        {
+            var questionsToDelete = _context.QuestionAnswers.Where(q => q.SubjectLessonId == module_id).Select(q => q.Id).ToList();
+            var answersToDelete = _context.TestAnswers.Where(a => questionsToDelete.Contains(a.QuestionId));
+
+            
+
+            if (answersToDelete == null || answersToDelete.Count() == 0)
+            {
+                return NotFound();
+            }
+
+            _context.TestAnswers.RemoveRange(answersToDelete);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
         // DELETE: api/TestAnswers/5
